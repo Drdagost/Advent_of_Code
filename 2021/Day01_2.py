@@ -1,26 +1,24 @@
 import itertools
+import pandas as pd
 
 with open('2021\Day01_input.txt') as f:
-    integer_array = []
+    integer_list = []
     for line in f:
-        integer_array.append(int(line.rstrip('\n')))
+        integer_list.append(int(line.rstrip('\n')))
 
-window_size = 3
-i = 0
-window_sum = []
-while i < len(integer_array) - window_size + 1:
-    this_window = integer_array[i : i + window_size]
-    window_sum.append(sum(this_window))
-    i += 1
+def rolling_sum(int_list, window):
+    rolling_sum = pd.Series(int_list).rolling(window).sum()
+    return rolling_sum
+
+rolling_sum = rolling_sum(integer_list, 3)
 
 total = 0
-for idx in range(1, len(window_sum)):
-    if window_sum[idx - 1] < window_sum[idx]:
-        print(f'{window_sum[idx]} increased')
+for idx in range(1, len(rolling_sum)):
+    if rolling_sum[idx - 1] < rolling_sum[idx]:
+        print(f'{rolling_sum[idx]} increased')
         total += 1
     else:
-        print(f'{window_sum[idx]} decreased')
+        print(f'{rolling_sum[idx]} decreased')
 
 
 print(f'Total increased {total}')
-
