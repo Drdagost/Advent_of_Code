@@ -6,7 +6,7 @@ with open('2021\Day02_input.txt') as f:
         input.append(line.rstrip('\n'))
 
 
-def calc_pos(input):
+def calc_pos(input: list) ->int:
     hor = 0
     ver = 0
     aim = 0

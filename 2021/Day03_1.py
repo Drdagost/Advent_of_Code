@@ -1,46 +1,43 @@
 import itertools
+from typing import List
 
 with open('2021\Day03_input.txt') as f:
-    input = []
-    for line in f:
-        input.append(line.rstrip('\n'))
+    data = [x.rstrip() for x in f.readlines()]
 
 gamma_rate = ''
 epsilon_rate = ''
-pos = [0,0,0,0,0,0,0,0,0,0,0,0]
+row_totals = []
 
-for line in input:
-    for x in range(0, len(line)):
-        pos[x] += int(line[x])
-print(pos)
-print(len(input))
+def calc_row_totals(data: list) -> list:
+    pos = [0 for x in data[0]]
+    for line in data:
+        for x in range(0, len(line)):
+            pos[x] += int(line[x])
+    return pos
 
-for x in range(0, len(pos)):
-    if pos[x] > (len(input) / 2):
-        gamma_rate += '1'
-        epsilon_rate += '0'
-    else:
-        gamma_rate += '0'
-        epsilon_rate += '1'
+def most_common(data: list, threshold: int) -> str:
+    result = ''
+    for x in range(0, len(data)):
+        if data[x] >= threshold:
+            result += '1'
+        else:
+            result += '0'
+    return result
 
-print(gamma_rate)
-print(epsilon_rate)
-print(int(gamma_rate, 2) * int(epsilon_rate, 2))
+def least_common(data: list, threshold: int) -> str:
+    result = ''
+    for x in range(0, len(data)):
+        if data[x] >= threshold:
+            result += '0'
+        else:
+            result += '1'
+    return result
 
+row_totals = calc_row_totals(data)
+gamma_rate = most_common(row_totals, (len(data) / 2))
+epsilon_rate = least_common(row_totals, (len(data) / 2))
 
-# def calc_pos(input):
-#     hor = 0
-#     ver = 0
-#     for cmd in input:
-#         cmd = str.split(cmd)
-#         if cmd[0] == 'forward':
-#             hor += int(cmd[1])
-#         if cmd[0] == 'down':
-#             ver += int(cmd[1])
-#         if cmd[0] == 'up':
-#             ver -= int(cmd[1])
-#     return(hor * ver)
-
-# pos = calc_pos(input)
-        
-# print(f'Position is {pos}')
+print(f'Column totals: {row_totals}')
+print(f'Gamma rate: {gamma_rate}')
+print(f'Epsilon rate: {epsilon_rate}')
+print(f'Power consumption: {int(gamma_rate, 2) * int(epsilon_rate, 2)}')
