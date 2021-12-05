@@ -101,9 +101,3 @@ if __name__ == "__main__":
     print(f'Sum of all unmarked numbers: {sum_unmarked_num}')
     print(f'Last number called: {winning_num}')
     print(f'Final score: {sum_unmarked_num * winning_num}')
-    
-        # if player1.checkBingo() and player2.checkBingo():
-        #     print("DRAW")
-        #     break
-        
-            
