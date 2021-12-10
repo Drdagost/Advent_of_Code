@@ -1,3 +1,5 @@
+import statistics
+
 class NavErrors:
     def __init__(self):
         self.always_valid = ['(', '[', '{', '<']
@@ -22,21 +24,21 @@ class NavErrors:
 
 
     def calc_points(self, value: str) -> int:
-        if value == ')':
+        if value == '(':
+            return(1)
+        elif value == '[':
+            return(2)
+        elif value == '{':
             return(3)
-        elif value == ']':
-            return(57)
-        elif value == '}':
-            return(1197)
-        elif value == '>':
-            return(25137)
+        elif value == '<':
+            return(4)
         else:
             return(0)   
 
 if __name__ == "__main__":
     naverror = NavErrors()
-    illegal_cha = []
-    total = 0
+    rev_list = []
+    total_points = []
     
     # Read points.
     with open('2021\Day10_input.txt') as f:
@@ -49,12 +51,18 @@ if __name__ == "__main__":
                 elif naverror.is_expected() == c:
                     naverror.current_list.pop()
                 else:
-                    print(f'{line} - Expected {naverror.is_expected()}, but found {c} instead.')
-                    illegal_cha.append(c)
+                    #print(f'{line} - Expected {naverror.is_expected()}, but found {c} instead.')
+                    naverror.current_list = []
                     break
-    
-    for c in illegal_cha:
-        total += naverror.calc_points(c)
-    
-    print(f'Total syntax error score for this file is: {total}')                
-            
+
+            if len(naverror.current_list) > 0:
+                total = 0
+                rev_list = naverror.current_list
+                rev_list.reverse()
+                for c in rev_list:
+                    total *= 5
+                    total += naverror.calc_points(c)
+                total_points.append(total)
+                print(f'{line} - Complete by adding {len(naverror.current_list)} characters, total points: {total}')
+
+    print(f'The middle score {statistics.median(total_points)}')
