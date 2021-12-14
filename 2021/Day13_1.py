@@ -31,10 +31,7 @@ class Transparency:
                 new_point = [(2 * digit) - point[0], point[1]]
                 self.add_point(new_point)
                 self.points.pop(point)
-
-    def print_letters(self):
-        for point in self.points:
-            li = list(self.points.keys())
+        print()
 
 
 if __name__ == "__main__":
@@ -53,24 +50,10 @@ if __name__ == "__main__":
                 line = line.split(',')
                 t.add_point(line)
 
-    fold = t.folds[0]
-    if fold[0] == 'y':
-        t.fold_up(fold[1])
-    if fold[0] == 'x':
-        t.fold_left(fold[1])
+    for fold in t.folds:
+        if fold[0] == 'y':
+            t.fold_up(fold[1])
+        if fold[0] == 'x':
+            t.fold_left(fold[1])
 
-    
-    li = list(t.points.keys())
-    largest_y = 0
-    for i in li:
-        for y in i:
-            if y > largest_y:
-                largest_y = y
-    list_of_x = []
-    new_list = []
-    for x in range(largest_y):
-        new_list.append([])
-    
-    print(new_list[4])
-    print(largest_y)
     print(f'Visible dots: {len(t.points)}')
