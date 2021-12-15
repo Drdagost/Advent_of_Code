@@ -1,33 +1,40 @@
+from collections import defaultdict
+
 class Polymerization:
     def __init__(self):
 
         self.pairs = {}
         self.polymer_template = []
-        self.current_template = []
-        self.char_freq = {}        
+        self.current_pairs = defaultdict(int)
+        self.char_freq = defaultdict(int)        
 
+    
     def add_pair(self, point: list) -> None:
         self.pairs[point[0]] = point[1]
 
-    def insert_polymer(self, polymer: str, index: int) -> None:
-        self.current_template.insert(index, polymer)
+    def initial_pairs(self):
+        for c in range(0, len(self.polymer_template) - 1):
+            pair = self.polymer_template[c] + self.polymer_template[c + 1]
+            self.current_pairs[pair] += 1
 
-    def insert_polymers(self) -> None:
-        self.current_template = self.polymer_template.copy()
-        polymers_added = 0
-        for i in range(len(self.polymer_template) - 1):
-            polymer = self.polymer_template[i] + self.polymer_template[i + 1]
-            if polymer in self.pairs:
-                polymers_added += 1
-                self.insert_polymer(self.pairs[polymer], i + polymers_added)
-        self.polymer_template = self.current_template
+    def make_new_pairs(self):
+        new_pairs = defaultdict(int)
+        for pair in self.current_pairs:
+            new_polymer = self.pairs[pair]
+        
+            new_pair_1 = pair[0] + new_polymer
+            new_pair_2 = new_polymer + pair[1]
+        
+            new_pairs[new_pair_1] += self.current_pairs[pair]
+            new_pairs[new_pair_2] += self.current_pairs[pair]
+        
+            self.char_freq[new_polymer] += self.current_pairs[pair]
+        self.current_pairs = new_pairs
+
 
     def freq(self):
-        for i in self.polymer_template:
-            if i in self.char_freq:
-                self.char_freq[i] += 1
-            else:
-                self.char_freq[i] = 1
+        for c in self.polymer_template:
+            self.char_freq[c] += 1
 
 if __name__ == "__main__":
     p = Polymerization()
@@ -46,12 +53,14 @@ if __name__ == "__main__":
                 line = line.split(' -> ')
                 p.add_pair(line)
 
-    for c in range(steps):
-        p.insert_polymers()
-    print(p.polymer_template)
     p.freq()
-    max_freq = p.char_freq[max(p.char_freq, key = p.char_freq.get)]
-    min_freq = p.char_freq[min(p.char_freq, key = p.char_freq.get)]
+    p.initial_pairs()
+    for c in range(steps):
+        p.make_new_pairs()
+    print(p.current_pairs)
+
+    max_freq = max(p.char_freq.values())
+    min_freq = min(p.char_freq.values())
     print(f'The max frequency is: {max_freq}')
     print(f'The min frequency is: {min_freq}')
     print(f'Most common - Least common: {max_freq - min_freq}')
